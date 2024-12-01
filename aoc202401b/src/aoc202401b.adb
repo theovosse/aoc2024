@@ -23,23 +23,33 @@ procedure Aoc202401b is
       Elt1, Elt2 : Integer;
       N1, N2 : Integer;
       Similarity : Integer := 0;
+
+      --  Given a List, a valid Cursor and the value at the cursor, this
+      --  function counts the number of subsequent elements with the same
+      --  value, progresses the cursor to the first element with another
+      --  value, and returns the count.
+      function Progress_List_Across_Value
+         (List : in out Integer_Vectors.Vector;
+          Cur : in out Cursor;
+          Elt : Integer) return Integer is
+         N : Integer := 0;
+      begin
+         N := 1;
+         Cur := Next (Cur);
+         while Cur /= No_Element and then Element (Cur) = Elt loop
+            Cur := Next (Cur);
+            N := N + 1;
+         end loop;
+         return N;
+      end Progress_List_Across_Value;
+
    begin
       while Cur1 /= No_Element and then Cur2 /= No_Element loop
          Elt1 := Element (Cur1);
          Elt2 := Element (Cur2);
          if Elt1 = Elt2 then
-            N1 := 1;
-            Cur1 := Next (Cur1);
-            while Cur1 /= No_Element and then Element (Cur1) = Elt1 loop
-               Cur1 := Next (Cur1);
-               N1 := N1 + 1;
-            end loop;
-            N2 := 1;
-            Cur2 := Next (Cur2);
-            while Cur2 /= No_Element and then Element (Cur2) = Elt2 loop
-               Cur2 := Next (Cur2);
-               N2 := N2 + 1;
-            end loop;
+            N1 := Progress_List_Across_Value (List1, Cur1, Elt1);
+            N2 := Progress_List_Across_Value (List2, Cur2, Elt2);
             Similarity := Similarity + N1 * N2 * Elt2;
          elsif Elt1 < Elt2 then
             Cur1 := Next (Cur1);
