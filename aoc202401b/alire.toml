@@ -1,0 +1,12 @@
+name = "aoc202401b"
+description = "AOC 2024, problem 1, B"
+version = "0.1.0-dev"
+
+authors = ["TGV"]
+maintainers = ["TGV <theovosse@gmx.com>"]
+maintainers-logins = ["theovosse"]
+licenses = "custom-none"
+website = ""
+tags = []
+
+executables = ["aoc202401b"]
