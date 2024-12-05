@@ -40,15 +40,6 @@ procedure Aoc202405a is
       end if;
    end Add_Constraint;
 
-   procedure Constraint_Closure is
-      Change : Boolean;
-   begin
-      loop
-         Change := False;
-         exit when not Change;
-      end loop;
-   end Constraint_Closure;
-
    function Split_Line (Line : String)
       return Integer_Vectors.Vector is
       List : Integer_Vectors.Vector;
@@ -59,11 +50,9 @@ procedure Aoc202405a is
       while Pos <= Line'Last loop
          Find_Token (Line, Separator, Pos, Outside, Start, Finish);
          if Finish = 0 then
-            --  Put_Line ("last = " & Line (Start .. Line'Last));
             List.Append (Integer'Value (Line (Start .. Line'Last)));
             exit;
          end if;
-         --  Put_Line ("num = " & Line (Start .. Finish));
          List.Append (Integer'Value (Line (Start .. Finish)));
          Pos := Finish + 1;
       end loop;
@@ -94,36 +83,6 @@ procedure Aoc202405a is
              Partial_Ordering (A).Contains (B);
    end Page_Number_Less_Than;
 
-   function Fix_List (Page_Number_List : Integer_Vectors.Vector) return Integer_Vectors.Vector is
-   begin
-      return Page_Number_List;
-   end Fix_List;
-
-   procedure Page_Number_Swap (I, J : Natural) is
-      Tmp : constant Integer := Page_Number_List (I);
-   begin
-      Page_Number_List (I) := Page_Number_List (J);
-      Page_Number_List (J) := Tmp;
-   end Page_Number_Swap;
-
-   function Index_Of_Smallest_Value (L : Integer_Vectors.Vector; I, Last_Index : Natural) return Natural is
-      Index : Natural := I;
-      Minimum : Integer : L (I);
-   begin
-      for J in I + 1 .. Last_Index loop
-         if 
-      end loop;
-      return Index;
-   end Index_Of_Smallest_Value;
-
-   procedure Sort_Page_Number_List (L : Integer_Vectors.Vector) is
-      Last_Index : constant Natural := Length (L) - 1;
-   begin
-      for I in 0 .. Last_Index - 1 loop
-         Page_Number_Swap (I, Index_Of_Smallest_Value (L, I, Last_Index));
-      end loop;
-   end Sort_Page_Number_List;
-
    Sum_Of_Correct : Integer := 0;
    Sum_Of_Fixed : Integer := 0;
 
@@ -137,27 +96,29 @@ begin
          Add_Constraint (Line);
       end;
    end loop;
-   Constraint_Closure;
-   --  Process the rest of the input as a comma separated numbers
+   --  Process the rest of the input as a lists of page numbers
    while not End_Of_File loop
       declare
          Line : constant Unbounded_String := Ada.Text_IO.Unbounded_IO.Get_Line;
          Page_Number_List : Integer_Vectors.Vector := Split_Line (To_String (Line));
-         procedure Printlist (Msg : String) is
+         function Page_Number_In_Order (I, J : Natural) return Boolean is
          begin
-            Put (Msg & ": ");
-            for P of Page_Number_List loop
-               Put (Integer'Image (P));
-            end loop;
-            Put_Line ("");
-         end Printlist;
+            return Page_Number_Less_Than (Page_Number_List (I), Page_Number_List (J));
+         end Page_Number_In_Order;
+         procedure Page_Number_Swap (I, J : Natural) is
+            Tmp : constant Integer := Page_Number_List (I);
+         begin
+            Page_Number_List (I) := Page_Number_List (J);
+            Page_Number_List (J) := Tmp;
+         end Page_Number_Swap;
+         procedure Sort_Page_Number_List is new Ada.Containers.Generic_Sort
+            (Index_Type => Natural, Before => Page_Number_In_Order,
+             Swap => Page_Number_Swap);
       begin
          if Check_Order (Page_Number_List) then
             Sum_Of_Correct := @ + Page_Number_List (Integer (Page_Number_List.Length) / 2);
          else
-            Printlist ("Wrong");
-            Sort_Page_Number_List (Page_Number_List);
-            Printlist ("Sorted");
+            Sort_Page_Number_List (0, Integer (Page_Number_List.Length) - 1);
             Sum_Of_Fixed := @ + Page_Number_List (Integer (Page_Number_List.Length) / 2);
          end if;
       end;
