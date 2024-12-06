@@ -1,0 +1,12 @@
+name = "aoc202406a"
+description = "AoC Day 6 problem 1"
+version = "0.1.0-dev"
+
+authors = ["TGV"]
+maintainers = ["TGV <theovosse@gmx.com>"]
+maintainers-logins = ["theovosse"]
+licenses = "MIT OR Apache-2.0 WITH LLVM-exception"
+website = ""
+tags = ["custom-none"]
+
+executables = ["aoc202406a"]
