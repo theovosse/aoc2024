@@ -1,9 +1,9 @@
 package Calibrations is
 
-   type Num_List is array (Natural range <>) of Long_Integer ;
+   type Num_List is array (Natural range <>) of Long_Integer;
 
    type Calibration is record
-      Goal : Long_Integer ;
+      Goal : Long_Integer;
       Operands : access Num_List;
    end record;
 
