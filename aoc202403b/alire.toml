@@ -3,8 +3,8 @@ description = "AOC Day 3 Problem 2"
 version = "0.1.0-dev"
 
 authors = ["TGV"]
-maintainers = ["TGV <theovosse@gmx.com>"]
-maintainers-logins = ["theovosse"]
+maintainers = ["TGV <email>"]
+maintainers-logins = ["xxx"]
 licenses = "custom-none"
 website = ""
 tags = []
