@@ -76,10 +76,15 @@ procedure Aoc202409b is
    end Find_First_Empty_Pos;
 
    procedure Move (End_Src, Start_Dest : Natural; Size : Size_Type) is
+      Orig_Empty : constant File_Id_Type := -Disk_Content (Start_Dest);
+      New_Empty : constant File_Id_Type := -(Orig_Empty - File_Id_Type (Size));
    begin
-      for I in 1 .. Natural (Size) loop
-         Disk_Content (Start_Dest + I - 1) := Disk_Content (End_Src - I + 1);
-         Disk_Content (End_Src - I + 1) := -File_Id_Type (Size); --  There's no need to combine empty chunks, since we're never going back towards the end
+      for I in 0 .. Natural (Size) - 1 loop
+         Disk_Content (Start_Dest + I) := Disk_Content (End_Src - I);
+         Disk_Content (End_Src - I) := -File_Id_Type (Size); --  There's no need to combine empty chunks, since we're never going back towards the end
+      end loop;
+      for I in Natural (Size) .. Natural (Orig_Empty) - 1 loop
+         Disk_Content (Start_Dest + I) := New_Empty;
       end loop;
    end Move;
 
@@ -91,18 +96,25 @@ procedure Aoc202409b is
       Shrink_Limit : Natural := No_Such_Position;
       Empty_Pos : Natural;
       Size : Size_Type;
+      RV : File_Id_Type;
    begin
       while Right > 0 loop
+         RV := Disk_Content (Right);
          if not Is_Disk_Content_Empty (Right) then
             Size := Get_File_Size (Right);
             Empty_Pos := Find_First_Empty_Pos (Size);
-            if Empty_Pos /= No_Such_Position then
+            if Empty_Pos /= No_Such_Position and then Empty_Pos < Right then
                Move (Right, Empty_Pos, Size);
-            elsif Shrink_Limit = No_Such_Position then
-               Shrink_Limit := Right + 1; --  can't shrink further
+            else
+               if Shrink_Limit = No_Such_Position then
+                  Shrink_Limit := Right + 1; --  can't shrink further
+               end if;
             end if;
          end if;
          Right := Right - 1;
+         while Right > 0 and then Disk_Content (Right) = RV loop
+            Right := Right - 1;
+         end loop;
       end loop;
       Disk_Content_Len :=
          (if Shrink_Limit = No_Such_Position then Right + 1 else Shrink_Limit);

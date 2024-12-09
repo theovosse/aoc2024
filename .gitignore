@@ -7,3 +7,4 @@ input*.txt
 testinput*.txt
 *.js
 *.json
+testoutput*.txt
