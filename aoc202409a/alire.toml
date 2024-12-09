@@ -1,0 +1,12 @@
+name = "aoc202409a"
+description = "AoC day 9 problem 1"
+version = "0.1.0-dev"
+
+authors = ["TGV"]
+maintainers = ["TGV <theovosse@gmx.com>"]
+maintainers-logins = ["theovosse"]
+licenses = "custom-none"
+website = ""
+tags = []
+
+executables = ["aoc202409a"]
