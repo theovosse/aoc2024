@@ -1,5 +1,5 @@
-name = "split"
-description = "attempt at library"
+name = "aoc202409b"
+description = "AoC day 9 problem 2"
 version = "0.1.0-dev"
 
 authors = ["TGV"]
@@ -9,4 +9,4 @@ licenses = "custom-none"
 website = ""
 tags = []
 
-executables = ["split"]
+executables = ["aoc202409b"]
