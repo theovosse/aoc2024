@@ -1,7 +1,6 @@
 obj/
 bin/
 alire/
-config/
 .vscode
 aoc202402a/input.txt
 input*.txt
