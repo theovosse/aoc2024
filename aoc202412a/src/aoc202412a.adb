@@ -29,14 +29,6 @@ procedure Aoc202412a is
       Height := Integer (Document.Length);
    end Read_Document;
 
-   --  function Position_To_Int (I, J : Integer) return Integer is (I * Width + J - 1);
-
-   --  procedure Int_To_Position (Pos : Integer; I, J : out Integer) is
-   --  begin
-   --     I := Pos / Width;
-   --     J := Pos mod Width + 1;
-   --  end Int_To_Position;
-
    function Is_In_Bounds (I, J : Integer) return Boolean is
       (0 <= I and then I < Height and then 1 <= J and then J <= Width);
 
@@ -45,39 +37,6 @@ procedure Aoc202412a is
    function Crop_At (I, J : Integer) return Character is
       (if Is_In_Bounds (I, J) then Element (Document (I), J) else ' ');
 
-   --  function Area_At (I0, J0 : Integer) return Natural is
-   --     Crop : constant Character := Element (Document (I0), J0);
-   --     Crop_Positions : Int_Set.Set;
-   --     Position_Queue : Queue;
-   --     Next_Position : Integer;
-   --     I, J : Integer;
-   --  begin
-   --     Enqueue (Position_Queue, Position_To_Int (I0, J0));
-   --     while Integer (Current_Use (Position_Queue)) /= 0 loop
-   --        Dequeue (Position_Queue, Next_Position);
-   --        Int_To_Position (Next_Position, I, J);
-   --        if Is_In_Bounds (I, J) and then not Crop_Positions.Contains (Next_Position) then
-   --           Crop_Positions.Insert (Next_Position);
-   --           Enqueue (Position_Queue, Position_To_Int (I - 1, J));
-   --           Enqueue (Position_Queue, Position_To_Int (I + 1, J));
-   --           Enqueue (Position_Queue, Position_To_Int (I, J - 1));
-   --           Enqueue (Position_Queue, Position_To_Int (I, J + 1));
-   --        end if;
-   --     end loop;
-   --     return Natural (Crop_Positions.Length);
-   --  end Area_At;
-
-   --  procedure Determine_Area is
-   --     Row : Nat_Vec.Vector;
-   --  begin
-   --     for I in 0 .. Height - 1 loop
-   --        for J in 1 .. Width loop
-   --           Row.Append (Area_At (I, J));
-   --        end loop;
-   --        Area.Append (Row);
-   --     end loop;
-   --  end Determine_Area;
-
    procedure Determine_Area is
       type Nat_Mat2 is array (0 .. Height - 1, 1 .. Width) of Natural;
       Area_Index : Nat_Mat2;
@@ -85,6 +44,7 @@ procedure Aoc202412a is
       Idx : Natural := 0;
       Crop : Character;
       Changed : Boolean;
+
       procedure Replace_Area_Index (To : Natural; From : Natural) is
       begin
          for I in 0 .. Height - 1 loop
@@ -95,16 +55,7 @@ procedure Aoc202412a is
             end loop;
          end loop;
       end Replace_Area_Index;
-      procedure Print_Mat (Text : String; M : Nat_Mat2) is
-      begin
-         Put_Line (Text);
-         for I in 0 .. Height - 1 loop
-            for J in 1 .. Width loop
-               Ada.Integer_Text_IO.Put (M (I, J), 3);
-            end loop;
-            Put_Line ("");
-         end loop;
-      end Print_Mat;
+
    begin
       --  Give each cell its own index
       for I in 0 .. Height - 1 loop
@@ -136,7 +87,6 @@ procedure Aoc202412a is
             end if;
          end loop;
       end loop;
-      Print_Mat ("AREAS", Area_Index);
       --  Count the frequency of the indices
       for I in 0 .. Height - 1 loop
          for J in 1 .. Width loop
@@ -175,17 +125,12 @@ procedure Aoc202412a is
       return N;
    end Perimiter_Price_At;
 
-   function Area_Price_At (I, J : Integer) return Natural is
-   begin
-      return Area (I) (J - 1);
-   end Area_Price_At;
-
    function Perimiter_Price return Natural is
       N : Natural := 0;
    begin
       for I in 0 .. Height - 1 loop
          for J in 1 .. Width loop
-            N := N + Perimiter_Price_At (I, J) * Area_Price_At (I, J);
+            N := N + Perimiter_Price_At (I, J) * Area (I) (J - 1);
          end loop;
       end loop;
       return N;
