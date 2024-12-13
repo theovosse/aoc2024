@@ -1,0 +1,12 @@
+name = "aoc202413a"
+description = "aoc 13 1"
+version = "0.1.0-dev"
+
+authors = ["tgv"]
+maintainers = ["tgv <email@email.email>"]
+maintainers-logins = ["xxx"]
+licenses = "MIT OR Apache-2.0 WITH LLVM-exception"
+website = ""
+tags = []
+
+executables = ["aoc202413a"]
