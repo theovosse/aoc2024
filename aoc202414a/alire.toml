@@ -1,0 +1,12 @@
+name = "aoc202414a"
+description = ""
+version = "0.1.0-dev"
+
+authors = ["TGV"]
+maintainers = ["TGV <email@email.email>"]
+maintainers-logins = ["xxx"]
+licenses = "custom-none"
+website = ""
+tags = []
+
+executables = ["aoc202414a"]
