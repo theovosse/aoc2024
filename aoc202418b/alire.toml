@@ -1,0 +1,12 @@
+name = "main"
+description = "AoC"
+version = "0.1.0-dev"
+
+authors = ["tgv"]
+maintainers = ["tgv <email@email.email>"]
+maintainers-logins = ["xxx"]
+licenses = "custom-none"
+website = ""
+tags = []
+
+executables = ["main"]
