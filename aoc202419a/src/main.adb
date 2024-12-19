@@ -2,13 +2,13 @@ pragma Ada_2022;
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Text_IO.Unbounded_IO; use Ada.Text_IO.Unbounded_IO;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-with Ada.Containers.Ordered_Sets;
+with Ada.Containers.Ordered_Maps;
 
 procedure Main is
 
-   Max_Trie_Index : constant Natural := 1000;
+   --  Using a trie structure in fixed memory (checking array indices is easier than pointers)
 
-   type Trie_Node;
+   Max_Trie_Index : constant Natural := 1000;
 
    type Trie_Node_Index is new Natural range 0 .. Max_Trie_Index;
 
@@ -38,6 +38,8 @@ procedure Main is
       pragma Unreferenced (Index);
    end Init_Trie;
 
+   --  Insert `Alt` in the trie. It's possible to optimize the trie
+   --  afterwards, but that's unnecessary for this problem set.
    procedure Add_Alternative (Alt : String) is
       Ptr : Trie_Node_Index := Start_Trie_Index;
       Ch : Character;
@@ -52,6 +54,7 @@ procedure Main is
       Trie (Ptr).Terminal := True;
    end Add_Alternative;
 
+   --  Split `Str` into parts, and add each one to the trie
    procedure Make_Pattern (Str : Unbounded_String; Sep : String) is
       Cur : Positive := 1;
       Pos : Natural;
@@ -66,49 +69,78 @@ procedure Main is
       Add_Alternative (Slice (Str, Cur, Length (Str)));
    end Make_Pattern;
 
-   package Index_Set is new Ada.Containers.Ordered_Sets (Trie_Node_Index);
+   package Index_Map is new Ada.Containers.Ordered_Maps (Trie_Node_Index, Long_Integer);
+   use Index_Map;
 
-   type State_Set_Index is new Natural range 0 .. 1;
+   type State_Map_Index is new Natural range 0 .. 1;
 
-   function Matches (Str : Unbounded_String) return Boolean is
-      States : array (State_Set_Index) of Index_Set.Set;
-      Current_State_Set : State_Set_Index := 0;
+   --  Starting at the trie root, expand the set of all current positions in the
+   --  trie for each next character in `Str`. A `Terminal` node allows starting
+   --  again at the root. The string is accepted when the final set contains at
+   --  least one `Terminal` node.
+   --  The implementation switches between two sets of positions in the trie, to
+   --  avoid copying the previous set to the new set.
+   function Matches (Str : Unbounded_String) return Long_Integer is
+      States : array (State_Map_Index) of Index_Map.Map;
+      Current_State_Map : State_Map_Index := 0;
       Ch : Character;
       Next_State : Trie_Node_Index;
+      Count : Long_Integer;
+      Total : Long_Integer := 0;
    begin
-      States (Current_State_Set).Insert (Start_Trie_Index);
+      States (Current_State_Map).Insert (Start_Trie_Index, 1);
       for I in 1 .. Length (Str) loop
          Ch := Element (Str, I);
-         Current_State_Set := 1 - @;
-         States (Current_State_Set) := Index_Set.Empty_Set;
-         for Current_State of States (1 - Current_State_Set) loop
-            Next_State := Trie (Current_State).Next (Ch);
+         Current_State_Map := 1 - @;
+         States (Current_State_Map) := Empty_Map;
+         for Current_State in States (1 - Current_State_Map).Iterate loop
+            Next_State := Trie (Key (Current_State)).Next (Ch);
+            Count := Element (Current_State);
             if Next_State /= Start_Trie_Index then
-               States (Current_State_Set).Include (Next_State);
-               if Trie (Next_State).Terminal and then not States (Current_State_Set).Contains (Start_Trie_Index) then
+               if States (Current_State_Map).Contains (Next_State) then
+                  States (Current_State_Map).Replace (Next_State, Element (States (Current_State_Map), Next_State) + Count);
+               else
+                  States (Current_State_Map).Include (Next_State, Count);
+               end if;
+               if Trie (Next_State).Terminal then
                   --  Restart when the next state
-                  States (Current_State_Set).Include (Start_Trie_Index);
+                  if States (Current_State_Map).Contains (Start_Trie_Index)
+                  then
+                     Replace (States (Current_State_Map), Start_Trie_Index, Element (States (Current_State_Map), Start_Trie_Index) + Count);
+                  else
+                     States (Current_State_Map).Include (Start_Trie_Index, Count);
+                  end if;
                end if;
             end if;
          end loop;
       end loop;
-      return (for some Index of States (Current_State_Set) => Trie (Index).Terminal);
+      for State in States (Current_State_Map).Iterate loop
+         if Trie (Key (State)).Terminal then
+            Total := @ + Element (State);
+         end if;
+      end loop;
+      return Total;
    end Matches;
 
    procedure Read_Document is
       Line : Unbounded_String;
-      Nr_Possible : Natural := 0;
+      Nr_Possible : Long_Integer := 0;
+      Nr_Matches : Long_Integer;
+      Total_Nr_Matches : Long_Integer := 0;
    begin
       Line := Get_Line;
       Make_Pattern (Line, ", ");
       Line := Get_Line;
       while not End_Of_File loop
          Line := Get_Line;
-         if Matches (Line) then
+         Nr_Matches := Matches (Line);
+         if Nr_Matches > 0 then
             Nr_Possible := @ + 1;
+            Total_Nr_Matches := @ + Nr_Matches;
          end if;
       end loop;
       Put_Line (Nr_Possible'Image);
+      Put_Line (Total_Nr_Matches'Image);
    end Read_Document;
 
 begin
