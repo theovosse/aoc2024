@@ -65,25 +65,15 @@ procedure Main is
       return M;
    end Convert;
 
-   --  procedure Print (M : Bool_Mat) is
+   --  procedure Print (M : Nat_AMat) is
    --  begin
    --     for I in M'Range (1) loop
    --        for J in M'Range (2) loop
-   --           Put (if Element (Document (I), J + 1) = '#' then "#" else ".");
+   --           Put (M (I, J), 3);
    --        end loop;
    --        Put_Line ("");
    --     end loop;
    --  end Print;
-
-   procedure Print (M : Nat_AMat) is
-   begin
-      for I in M'Range (1) loop
-         for J in M'Range (2) loop
-            Put (M (I, J), 3);
-         end loop;
-         Put_Line ("");
-      end loop;
-   end Print;
 
    function Shortest_Path_Length_From (Block : Bool_Mat; Start : Coordinate; Length : out Nat_AMat) return Natural is
       type Edges_Index is new Natural range 0 .. 1;
@@ -164,10 +154,6 @@ procedure Main is
    begin
       Max_Cost := Shortest_Path_Length_From (Block, Start, Start_Cost);
       Max_Cost := Shortest_Path_Length_From (Block, Finish, Finish_Cost);
-      --  Put_Line ("Start");
-      --  Print (Start_Cost);
-      --  Put_Line ("Finish");
-      --  Print (Finish_Cost);
       Print_All_Shortcuts;
       Put_Line (Nr_Savings_Over_100'Image);
    end Solve;

@@ -3,11 +3,11 @@ abstract project Main_Config is
    Crate_Version := "0.1.0-dev";
    Crate_Name := "main";
 
-   Alire_Host_OS := "macos";
+   Alire_Host_OS := "linux";
 
    Alire_Host_Arch := "x86_64";
 
-   Alire_Host_Distro := "homebrew";
+   Alire_Host_Distro := "ubuntu";
    Ada_Compiler_Switches := External_As_List ("ADAFLAGS", " ");
    Ada_Compiler_Switches := Ada_Compiler_Switches &
           (
@@ -32,7 +32,7 @@ abstract project Main_Config is
            ,"-gnatyI" -- check mode IN keywords
            ,"-gnatyk" -- Check keyword casing
            ,"-gnatyl" -- Check layout
-           --,"-gnatym" -- Check maximum line length
+           ,"-gnatym" -- Check maximum line length
            ,"-gnatyn" -- Check casing of entities in Standard
            ,"-gnatyO" -- Check that overriding subprograms are explicitly marked as such
            ,"-gnatyp" -- Check pragma casing
@@ -42,7 +42,6 @@ abstract project Main_Config is
            ,"-gnatyu" -- Check unnecessary blank lines
            ,"-gnatyx" -- Check extra parentheses
            ,"-gnatW8" -- UTF-8 encoding for wide characters
-           ,"-gnat2022" -- Ada 2022 features
           );
 
    type Build_Profile_Kind is ("release", "validation", "development");

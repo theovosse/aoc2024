@@ -71,10 +71,12 @@ procedure Main is
       begin
          for I in Best_Coords'Range (1) loop
             for J in Best_Coords'Range (2) loop
+               Put (if Best_Coords (I, J) /= 0 then 'O' else Element (Document (I), J));
                if Best_Coords (I, J) /= 0 then
                   Count := @ + 1;
                end if;
             end loop;
+            Put_Line ("");
          end loop;
          Put_Line ("Nr tiles on best paths =" & Count'Image);
       end Print_Best_Coords_Count;
