@@ -1,0 +1,15 @@
+Note: Building main=0.1.0-dev/main.gpr...
+Compile
+   [Ada]          main.adb
+Bind
+   [gprbind]      main.bexch
+   [Ada]          main.ali
+Link
+   [link]         main.adb
+Success: Build finished successfully in 0.90 seconds.
+029A: 68 v<A<AA>>^AvAA^<A>Av<<A>>^AvA^Av<<A>>^AAvA<A>^A<A>Av<A<A>>^AAAvA^<A>A
+980A: 60 v<<A>>^AAAvA^Av<A<AA>>^AvAA^<A>Av<A<A>>^AAAvA^<A>Av<A>^A<A>A
+179A: 68 v<<A>>^Av<A<A>>^AAvAA^<A>Av<<A>>^AAvA^Av<A>^AA<A>Av<A<A>>^AAAvA^<A>A
+456A: 64 v<<A>>^AAv<A<A>>^AAvAA^<A>Av<A>^A<A>Av<A>^A<A>Av<A<A>>^AAvA^<A>A
+379A: 68 v<<A>>^AvA^Av<<A>>^AAv<A<A>>^AAvAA^<A>Av<A>^AA<A>Av<A<A>>^AAAvA^<A>A
+Complexity sum is 127900
