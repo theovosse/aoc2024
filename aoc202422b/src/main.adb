@@ -21,15 +21,7 @@ procedure Main is
 
    procedure Clear_Sequence_Check is
    begin
-      for I in Diff_Range'Range loop
-         for J in Diff_Range'Range loop
-            for K in Diff_Range'Range loop
-               for L in Diff_Range'Range loop
-                  Sequence_Check (I, J, K, L) := False;
-               end loop;
-            end loop;
-         end loop;
-      end loop;
+      Sequence_Check := [others => [others => [others => [others => False]]]];
    end Clear_Sequence_Check;
 
    function Next_Secret (N : Rnd_Type) return Rnd_Type is
@@ -66,16 +58,13 @@ procedure Main is
    end Count_Next_Secret_Sequences;
 
    function Max_Sequence_Count return Short_Integer is
-      Max, V : Short_Integer := 0;
+      Max : Short_Integer := 0;
    begin
       for I in Diff_Range'Range loop
          for J in Diff_Range'Range loop
             for K in Diff_Range'Range loop
                for L in Diff_Range'Range loop
-                  V := Sequence_Count (I, J, K, L);
-                  if V > Max then
-                     Max := V;
-                  end if;
+                  Max := Short_Integer'Max (Max, Sequence_Count (I, J, K, L));
                end loop;
             end loop;
          end loop;
